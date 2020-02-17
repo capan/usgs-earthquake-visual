@@ -1,0 +1,20 @@
+.counter {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 100;
+  background-color: red;
+  height: 200px;
+  width: 200px;
+  border-radius: 100px;
+  transform: translate(-100px, -100px);
+  text-align: center;
+}
+
+.counter-text {
+  transform: translate(0px, 70px);
+}
+
+.left-to-right {
+  direction: rtl;
+}

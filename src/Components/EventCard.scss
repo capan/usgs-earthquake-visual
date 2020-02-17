@@ -1,0 +1,16 @@
+.event-card {
+  width: 90%;
+  margin: 16px auto;
+  border: 1px solid #eee;
+  box-shadow: 0 2px 3px #ccc;
+  padding: 16px;
+  text-align: center;
+  box-shadow: 10px 10px 5px grey;
+  @media (min-width: 500px) {
+    width: 70%;
+  }
+}
+
+.event-card:hover {
+  box-shadow: 10px 10px 5px black;
+}
