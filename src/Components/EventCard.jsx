@@ -6,7 +6,7 @@ import 'react-bootstrap';
 const EventCard = (props) => {
     const { detail: { properties: { mag, place, time }, id }, onCardMouseOver } = props;
     return (
-        <div key={id} data-key={id} className="event-card" onFocus={() => undefined} onMouseOver={(e) => onCardMouseOver(e)}>
+        <div id={id} key={id} data-key={id} className="event-card" onFocus={() => undefined} onMouseOver={(e) => onCardMouseOver(e)}>
             <div className="row">
                 <div className="col-md-4">
                     <p>{new Date(time).toLocaleString('se-SV')}</p>
