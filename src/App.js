@@ -1,5 +1,4 @@
-/* eslint-disable react/jsx-filename-extension */
-/* eslint-disable react/no-deprecated */
+
 /* eslint-disable react/destructuring-assignment */
 import React, { Component } from 'react';
 import ReactMapboxGl, { GeoJSONLayer } from 'react-mapbox-gl';
@@ -10,7 +9,6 @@ import SplitScreen from './Components/SplitScreen';
 import EventCardsHolder from './Components/EventCardsHolder';
 import EventCard from './Components/EventCard';
 import * as animationData from './Extras/loading.json';
-
 
 const Map = ReactMapboxGl({
   accessToken:
@@ -45,7 +43,7 @@ class App extends Component {
     };
   }
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     let sixMonthsBefore = new Date();
     let today = new Date();
     sixMonthsBefore.setMonth(today.getMonth() - 6);
@@ -105,15 +103,28 @@ class App extends Component {
   }
 
   onCardMouseOver(e) {
-    this.mapRef.props.children.props.circlePaint['circle-color'] = 'blue';
+    const { id } = e.target;
+    if (id) {
+      debugger
+      this.mapRef.state.map.setFeatureState(
+        // eslint-disable-next-line object-shorthand
+        { source: 'mygeolayer', id: id },
+        { hover: true },
+      );
+    }
   }
 
   earthQuakeHoverHandler(e) {
-    this.setState({
-      selectedEQId: e.features[0].properties.net + e.features[0].properties.code,
-    });
-    const el = document.getElementById(this.state.selectedEQId);
-    el.style.cssText = 'box-shadow: 10px 10px 5px black;';
+    if (e.type === 'mouseenter') {
+      this.setState({
+        selectedEQId: e.features[0].properties.net + e.features[0].properties.code,
+      });
+      const el = document.getElementById(this.state.selectedEQId);
+      el.style.setProperty('box-shadow', '10px 10px 5px black');
+    } else if (e.type === 'mouseleave') {
+      const el = document.getElementById(this.state.selectedEQId);
+      el.style.removeProperty('box-shadow');
+    }
   }
 
   async requestMaker(mapInstance, startTime, endTime) {
@@ -142,7 +153,13 @@ class App extends Component {
     MapboxGL.CircleLayout = { visibility: 'visible' };
     const circleLayout = MapboxGL.CircleLayout;
     MapboxGL.CirclePaint = {
-      'circle-color': 'rgba(255, 0, 0, 0.3)',
+      // 'circle-color': 'rgba(255, 0, 0, 0.3)',
+      'circle-color': [
+        'case',
+        ['boolean', ['feature-state', 'hover'], false],
+        'rgba(0, 0, 255, 0.8)',
+        'rgba(255, 0, 0, 0.3)',
+      ],
       'circle-radius': [
         'interpolate', ['linear'], ['zoom'],
         0, ['get', 'mag'],
@@ -169,6 +186,7 @@ class App extends Component {
         circlePaint={circlePaint}
         circleOnClick={this.onClickCircle}
         circleOnMouseEnter={this.earthQuakeHoverHandler}
+        circleOnMouseLeave={this.earthQuakeHoverHandler}
       />,
       geojsonData: coordinateList,
     });
