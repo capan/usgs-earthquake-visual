@@ -34,6 +34,7 @@ class App extends Component {
     this.onDragEndHandler = this.onDragEndHandler.bind(this);
     this.onZoomEndHandler = this.onZoomEndHandler.bind(this);
     this.onStyleLoadHandler = this.onStyleLoadHandler.bind(this);
+    this.earthQuakeHoverHandler = this.earthQuakeHoverHandler.bind(this);
     this.defaultOptions = {
       loop: true,
       autoplay: true,
@@ -107,6 +108,14 @@ class App extends Component {
     this.mapRef.props.children.props.circlePaint['circle-color'] = 'blue';
   }
 
+  earthQuakeHoverHandler(e) {
+    this.setState({
+      selectedEQId: e.features[0].properties.net + e.features[0].properties.code,
+    });
+    const el = document.getElementById(this.state.selectedEQId);
+    el.style.cssText = 'box-shadow: 10px 10px 5px black;';
+  }
+
   async requestMaker(mapInstance, startTime, endTime) {
     if (mapInstance.state && mapInstance.state.ready) {
       const bounds = mapInstance.state.map.getBounds();
@@ -159,6 +168,7 @@ class App extends Component {
         circleLayout={circleLayout}
         circlePaint={circlePaint}
         circleOnClick={this.onClickCircle}
+        circleOnMouseEnter={this.earthQuakeHoverHandler}
       />,
       geojsonData: coordinateList,
     });
