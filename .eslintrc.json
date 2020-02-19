@@ -1,7 +1,8 @@
 {
     "env": {
         "browser": true,
-        "es6": true
+        "es6": true,
+        "jest": true
     },
     "extends": [
         "plugin:react/recommended",
@@ -27,6 +28,8 @@
         "linebreak-style": "off",
         "indent": "off",
         "react/jsx-indent": "off",
-        "react/forbid-prop-types": "off"
+        "react/forbid-prop-types": "off",
+        "camelcase": "off",
+        "react/jsx-filename-extension": "off"
     }
 }
