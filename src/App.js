@@ -105,7 +105,6 @@ class App extends Component {
   onCardMouseOver(e) {
     const { id } = e.target;
     if (id) {
-      debugger
       this.mapRef.state.map.setFeatureState(
         // eslint-disable-next-line object-shorthand
         { source: 'mygeolayer', id: id },
