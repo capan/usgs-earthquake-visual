@@ -9,6 +9,7 @@ import SplitScreen from './Components/SplitScreen';
 import EventCardsHolder from './Components/EventCardsHolder';
 import EventCard from './Components/EventCard';
 import * as animationData from './Extras/loading.json';
+import RangeSlider from './Components/RangeSlider';
 
 const Map = ReactMapboxGl({
   accessToken:
@@ -21,8 +22,8 @@ class App extends Component {
       geojsonLayer: null,
       startDate: null,
       endDate: null,
-      mapCenter: [32.836386, 39.924712],
-      mapZoom: [6],
+      mapCenter: [35, 41],
+      mapZoom: [4.5],
       geojsonData: null,
     };
     this.mapRef = React.createRef();
@@ -31,7 +32,9 @@ class App extends Component {
     this.onCardMouseOver = this.onCardMouseOver.bind(this);
     this.onDragEndHandler = this.onDragEndHandler.bind(this);
     this.onZoomEndHandler = this.onZoomEndHandler.bind(this);
+    this.cardClickHandler = this.cardClickHandler.bind(this);
     this.onStyleLoadHandler = this.onStyleLoadHandler.bind(this);
+    this.sliderChangeHandler = this.sliderChangeHandler.bind(this);
     this.earthQuakeHoverHandler = this.earthQuakeHoverHandler.bind(this);
     this.defaultOptions = {
       loop: true,
@@ -47,6 +50,14 @@ class App extends Component {
     let sixMonthsBefore = new Date();
     let today = new Date();
     sixMonthsBefore.setMonth(today.getMonth() - 6);
+    sixMonthsBefore.setHours(0);
+    sixMonthsBefore.setMinutes(0);
+    sixMonthsBefore.setSeconds(0);
+    sixMonthsBefore.setMilliseconds(0);
+    today.setHours(23);
+    today.setMinutes(59);
+    today.setSeconds(59);
+    today.setMilliseconds(999);
     today = today.toISOString();
     sixMonthsBefore = sixMonthsBefore.toISOString();
     this.setState({
@@ -110,6 +121,23 @@ class App extends Component {
         { source: 'mygeolayer', id: id },
         { hover: true },
       );
+    }
+  }
+
+  cardClickHandler(coords) {
+    const [lat, lon] = coords;
+    this.setState({
+      mapCenter: [lat, lon],
+    });
+  }
+
+  sliderChangeHandler(e) {
+    const [startDate, endDate] = e;
+    if (this.state.startDate !== startDate || this.state.endDate !== endDate) {
+      this.setState({
+        startDate,
+        endDate,
+      }, () => this.requestMaker(this.mapRef, this.state.startDate, this.state.endDate));
     }
   }
 
@@ -198,6 +226,8 @@ class App extends Component {
         <EventCard
           onCardMouseOver={this.onCardMouseOver}
           detail={feature}
+          onCardClick={this.cardClickHandler}
+          key={Math.ceil(Math.random() * 10000000)}
         />
       ));
     }
@@ -216,21 +246,26 @@ class App extends Component {
           )}
         rightPane={
           (
-            <Map
-              onStyleLoad={() => this.onStyleLoadHandler(this.mapRef)}
-              ref={(map) => { this.mapRef = map; }}
-              style="mapbox://styles/mapbox/streets-v9" // eslint-disable-line
-              center={this.state.mapCenter}
-              zoom={this.state.mapZoom}
-              containerStyle={{
-                height: '100vh',
-                width: '50vw',
-              }}
-              onDragEnd={this.onDragEndHandler}
-              onZoomEnd={this.onZoomEndHandler}
-            >
-              {this.state.geojsonLayer}
-            </Map>
+            <div>
+              <div className="slider">
+                <RangeSlider onSliderChange={this.sliderChangeHandler} />
+              </div>
+              <Map
+                onStyleLoad={() => this.onStyleLoadHandler(this.mapRef)}
+                ref={(map) => { this.mapRef = map; }}
+                style="mapbox://styles/mapbox/streets-v9" // eslint-disable-line
+                center={this.state.mapCenter}
+                zoom={this.state.mapZoom}
+                containerStyle={{
+                  height: '100vh',
+                  width: '50vw',
+                }}
+                onDragEnd={this.onDragEndHandler}
+                onZoomEnd={this.onZoomEndHandler}
+              >
+                {this.state.geojsonLayer}
+              </Map>
+            </div>
           )
         }
       />
