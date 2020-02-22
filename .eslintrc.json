@@ -30,6 +30,7 @@
         "react/jsx-indent": "off",
         "react/forbid-prop-types": "off",
         "camelcase": "off",
-        "react/jsx-filename-extension": "off"
+        "react/jsx-filename-extension": "off",
+        "react/jsx-indent-props": "off"
     }
 }
