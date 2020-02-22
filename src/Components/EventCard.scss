@@ -5,6 +5,7 @@
   padding: 16px;
   text-align: center;
   box-shadow: 10px 10px 5px grey;
+  border-radius: 10px;
   @media (min-width: 500px) {
     width: 70%;
   }
@@ -12,4 +13,15 @@
 
 .event-card:hover {
   box-shadow: 10px 10px 5px black;
+}
+
+.magnitude {
+  background-color: red;
+  border-radius: 200px;
+  text-align: center;
+}
+
+.magnitude-text {
+  color: black;
+  font-weight: bold;
 }

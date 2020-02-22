@@ -4,10 +4,25 @@ import './EventCard.scss';
 import 'react-bootstrap';
 
 const EventCard = (props) => {
-    const { detail: { properties: { mag, place, time }, id }, onCardMouseOver } = props;
+    const {
+        detail: {
+            properties: { mag, place, time }, id,
+            geometry: { coordinates },
+        }, onCardMouseOver,
+    } = props;
     return (
-        <div id={id} key={id} data-key={id} className="event-card" onFocus={() => undefined} onMouseOver={(e) => onCardMouseOver(e)}>
-            <div className="row">
+        <div
+            id={id}
+            data-key={id}
+            className="event-card"
+            onClick={() => props.onCardClick(coordinates)}
+            onKeyDown={() => props.onCardClick}
+            onFocus={() => undefined}
+            onMouseOver={(e) => onCardMouseOver(e)}
+            role="button"
+            tabIndex={0}
+        >
+            <div key={id} className="row">
                 <div className="col-md-4">
                     <p>{new Date(time).toLocaleString('se-SV')}</p>
                 </div>
@@ -15,7 +30,12 @@ const EventCard = (props) => {
                     <p>{place}</p>
                 </div>
                 <div className="col-md-4">
-                    <p>{mag}</p>
+                    <div
+                        className="magnitude"
+                        style={{ height: `${mag * 10}px`, width: `${mag * 10}px` }}
+                    >
+                        <p className="magnitude-text" style={{ transform: `translate(0px, ${10 + Math.ceil(mag / 2)}px)` }}>{mag}</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -25,11 +45,13 @@ const EventCard = (props) => {
 EventCard.defaultProps = {
     detail: null,
     onCardMouseOver: () => { },
+    onCardClick: () => { },
 };
 
 EventCard.propTypes = {
-    detail: PropTypes.string,
+    detail: PropTypes.object,
     onCardMouseOver: PropTypes.func,
+    onCardClick: PropTypes.func,
 };
 
 export default EventCard;
