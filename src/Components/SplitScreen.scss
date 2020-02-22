@@ -4,17 +4,26 @@
   top: 50%;
   z-index: 100;
   background-color: red;
-  height: 200px;
-  width: 200px;
+  height: 100px;
+  width: 100px;
   border-radius: 100px;
-  transform: translate(-100px, -100px);
+  transform: translate(-35px, -35px);
   text-align: center;
 }
 
 .counter-text {
-  transform: translate(0px, 70px);
+  transform: translate(0px, 25px);
 }
 
 .left-to-right {
   direction: rtl;
+}
+
+.slider {
+  position: absolute;
+  left: 50%;
+  top: 10%;
+  z-index: 100;
+  transform: translate(-50px, -50px);
+  text-align: center;
 }
