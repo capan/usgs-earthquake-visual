@@ -10,6 +10,7 @@ import EventCardsHolder from './Components/EventCardsHolder';
 import EventCard from './Components/EventCard';
 import * as animationData from './Extras/loading.json';
 import RangeSlider from './Components/RangeSlider';
+import Switcher from './Components/Switcher';
 
 const Map = ReactMapboxGl({
   accessToken:
@@ -25,6 +26,8 @@ class App extends Component {
       mapCenter: [35, 41],
       mapZoom: [4.5],
       geojsonData: null,
+      dragSearch: true,
+      bounds: undefined,
     };
     this.mapRef = React.createRef();
     this.requestMaker = this.requestMaker.bind(this);
@@ -124,6 +127,12 @@ class App extends Component {
     }
   }
 
+  switcherChangeHandler(state) {
+    this.setState({
+      dragSearch: !state,
+    });
+  }
+
   cardClickHandler(coords) {
     const [lat, lon] = coords;
     this.setState({
@@ -156,7 +165,15 @@ class App extends Component {
 
   async requestMaker(mapInstance, startTime, endTime) {
     if (mapInstance.state && mapInstance.state.ready) {
-      const bounds = mapInstance.state.map.getBounds();
+      let bounds;
+      if (this.state.dragSearch) {
+        bounds = mapInstance.state.map.getBounds();
+        this.setState({
+          bounds,
+        })
+      } else {
+        bounds = this.state.bounds;
+      }
       const queryPart = `starttime=${startTime}&endtime=${endTime}&minlatitude=${bounds._sw.lat}&maxlatitude=${bounds._ne.lat}&minlongitude=${bounds._sw.lng}&maxlongitude=${bounds._ne.lng}`;
       const url = `https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&${queryPart}`;
       const data = await fetch(url);
@@ -249,6 +266,9 @@ class App extends Component {
             <div>
               <div className="slider">
                 <RangeSlider onSliderChange={this.sliderChangeHandler} />
+              </div>
+              <div className="switcher">
+                <Switcher onSwitcherChanged={(state) => this.switcherChangeHandler(state)} />
               </div>
               <Map
                 onStyleLoad={() => this.onStyleLoadHandler(this.mapRef)}
