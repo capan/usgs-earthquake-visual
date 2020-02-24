@@ -170,7 +170,7 @@ class App extends Component {
         bounds = mapInstance.state.map.getBounds();
         this.setState({
           bounds,
-        })
+        });
       } else {
         bounds = this.state.bounds;
       }
