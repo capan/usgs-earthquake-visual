@@ -23,13 +23,19 @@ class App extends Component {
       geojsonLayer: null,
       startDate: null,
       endDate: null,
-      mapCenter: [35, 41],
-      mapZoom: [4.5],
+      // mapCenter: [35, 41],
+      // mapZoom: [4.5],
+      mapCenter: [36, 37.5],
+      mapZoom: [10],
       geojsonData: null,
       dragSearch: true,
       bounds: undefined,
     };
     this.mapRef = React.createRef();
+
+    // mapbox-gl doesn't work with Id's in string. We sould hash the incoming id from the API
+    // eslint-disable-next-line no-bitwise
+    this.hashCode = (s) => s.split('').reduce((a, b) => (((a << 5) - a) + b.charCodeAt(0)) | 0, 0);
     this.requestMaker = this.requestMaker.bind(this);
     this.markerGenerator = this.markerGenerator.bind(this);
     this.onCardMouseOver = this.onCardMouseOver.bind(this);
@@ -119,9 +125,9 @@ class App extends Component {
   onCardMouseOver(e) {
     const { id } = e.target;
     if (id) {
+      debugger
       this.mapRef.state.map.setFeatureState(
-        // eslint-disable-next-line object-shorthand
-        { source: 'mygeolayer', id: id },
+        { source: 'mygeolayer', id },
         { hover: true },
       );
     }
@@ -137,6 +143,7 @@ class App extends Component {
     const [lat, lon] = coords;
     this.setState({
       mapCenter: [lat, lon],
+      mapZoom: [10],
     });
   }
 
@@ -153,12 +160,12 @@ class App extends Component {
   earthQuakeHoverHandler(e) {
     if (e.type === 'mouseenter') {
       this.setState({
-        selectedEQId: e.features[0].properties.net + e.features[0].properties.code,
+        hoveredEQId: this.hashCode(e.features[0].properties.net + e.features[0].properties.code),
       });
-      const el = document.getElementById(this.state.selectedEQId);
+      const el = document.getElementById(this.state.hoveredEQId);
       el.style.setProperty('box-shadow', '10px 10px 5px black');
     } else if (e.type === 'mouseleave') {
-      const el = document.getElementById(this.state.selectedEQId);
+      const el = document.getElementById(this.state.hoveredEQId);
       el.style.removeProperty('box-shadow');
     }
   }
@@ -170,7 +177,7 @@ class App extends Component {
         bounds = mapInstance.state.map.getBounds();
         this.setState({
           bounds,
-        })
+        });
       } else {
         bounds = this.state.bounds;
       }
@@ -181,6 +188,7 @@ class App extends Component {
       this.markerGenerator(dataJson);
     }
   }
+
 
   markerGenerator(coordinateList) {
     MapboxGL.SymbolLayout = {
@@ -197,7 +205,6 @@ class App extends Component {
     MapboxGL.CircleLayout = { visibility: 'visible' };
     const circleLayout = MapboxGL.CircleLayout;
     MapboxGL.CirclePaint = {
-      // 'circle-color': 'rgba(255, 0, 0, 0.3)',
       'circle-color': [
         'case',
         ['boolean', ['feature-state', 'hover'], false],
@@ -217,6 +224,7 @@ class App extends Component {
     };
     for (let i = 0; i < coordinateList.features.length; i += 1) {
       geojsonObject.features.push(coordinateList.features[i]);
+      geojsonObject.features[i].id = this.hashCode(coordinateList.features[i].id);
     }
     this.setState({
       geojsonLayer: <GeoJSONLayer
@@ -228,7 +236,6 @@ class App extends Component {
         symbolPaint={symbolPaint}
         circleLayout={circleLayout}
         circlePaint={circlePaint}
-        circleOnClick={this.onClickCircle}
         circleOnMouseEnter={this.earthQuakeHoverHandler}
         circleOnMouseLeave={this.earthQuakeHoverHandler}
       />,
@@ -242,6 +249,7 @@ class App extends Component {
       cards = this.state.geojsonData.features.map((feature) => (
         <EventCard
           onCardMouseOver={this.onCardMouseOver}
+          onCardMouseOut={this.onCard}
           detail={feature}
           onCardClick={this.cardClickHandler}
           key={Math.ceil(Math.random() * 10000000)}
