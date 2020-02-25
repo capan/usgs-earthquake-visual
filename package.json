@@ -9,6 +9,10 @@
     "@testing-library/user-event": "^7.2.1",
     "bootstrap": "^4.4.1",
     "jest-canvas-mock": "^2.2.0",
+<<<<<<< HEAD
+=======
+    "jsdom": "^16.2.0",
+>>>>>>> 5c4eb33f5ac3747702ba0805e649e39bc6398d49
     "mapbox-gl": "^1.7.0",
     "node-sass": "^4.13.1",
     "prop-types": "^15.7.2",
