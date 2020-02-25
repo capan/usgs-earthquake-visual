@@ -125,7 +125,6 @@ class App extends Component {
   onCardMouseOver(e) {
     const { id } = e.target;
     if (id) {
-      debugger
       this.mapRef.state.map.setFeatureState(
         { source: 'mygeolayer', id },
         { hover: true },
