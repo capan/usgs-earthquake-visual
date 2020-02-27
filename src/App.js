@@ -37,6 +37,7 @@ class App extends Component {
     // eslint-disable-next-line no-bitwise
     this.hashCode = (s) => s.split('').reduce((a, b) => (((a << 5) - a) + b.charCodeAt(0)) | 0, 0);
     this.requestMaker = this.requestMaker.bind(this);
+    this.onCardMouseOut = this.onCardMouseOut.bind(this);
     this.markerGenerator = this.markerGenerator.bind(this);
     this.onCardMouseOver = this.onCardMouseOver.bind(this);
     this.onDragEndHandler = this.onDragEndHandler.bind(this);
@@ -128,6 +129,16 @@ class App extends Component {
       this.mapRef.state.map.setFeatureState(
         { source: 'mygeolayer', id },
         { hover: true },
+      );
+    }
+  }
+
+  onCardMouseOut(e) {
+    const { id } = e.target;
+    if (id) {
+      this.mapRef.state.map.setFeatureState(
+        { source: 'mygeolayer', id },
+        { hover: false },
       );
     }
   }
@@ -248,7 +259,7 @@ class App extends Component {
       cards = this.state.geojsonData.features.map((feature) => (
         <EventCard
           onCardMouseOver={this.onCardMouseOver}
-          onCardMouseOut={this.onCard}
+          onCardMouseOut={this.onCardMouseOut}
           detail={feature}
           onCardClick={this.cardClickHandler}
           key={Math.ceil(Math.random() * 10000000)}
