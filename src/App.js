@@ -46,6 +46,7 @@ class App extends Component {
     this.onStyleLoadHandler = this.onStyleLoadHandler.bind(this);
     this.sliderChangeHandler = this.sliderChangeHandler.bind(this);
     this.earthQuakeHoverHandler = this.earthQuakeHoverHandler.bind(this);
+    this.paginationChangeHandler = this.paginationChangeHandler.bind(this);
     this.defaultOptions = {
       loop: true,
       autoplay: true,
@@ -54,6 +55,8 @@ class App extends Component {
         preserveAspectRatio: 'xMidYMid slice',
       },
     };
+    this.currentPage = undefined;
+    this.pageLimit = undefined;
   }
 
   UNSAFE_componentWillMount() {
@@ -141,6 +144,11 @@ class App extends Component {
         { hover: false },
       );
     }
+  }
+
+  paginationChangeHandler(paginationData) {
+    this.currentPage = paginationData.currentPage;
+    this.pageLimit = paginationData.pageLimit;
   }
 
   switcherChangeHandler(state) {
@@ -270,7 +278,16 @@ class App extends Component {
       <SplitScreen
         totalNumber={this.state.geojsonData ? this.state.geojsonData.features.length : 0}
         leftPane={this.state.geojsonData
-          ? <EventCardsHolder>{cards}</EventCardsHolder> : (
+          ? (
+            <EventCardsHolder
+              totalRecords={this.state.geojsonData ? this.state.geojsonData.features.length : 0}
+              pageChangeHandler={this.paginationChangeHandler}
+              currentPage={this.currentPage}
+              pageLimit={this.pageLimit}
+            >
+              {cards}
+            </EventCardsHolder>
+          ) : (
             <Lottie
               options={this.defaultOptions}
               height={400}
