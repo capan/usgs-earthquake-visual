@@ -104,26 +104,7 @@ class App extends Component {
   }
 
   onStyleLoadHandler(mapInstance) {
-    // let hoveredStateId = null;
     this.requestMaker(mapInstance, this.state.startDate, this.state.endDate);
-    // debugger
-    // if (!this.mapRef.current) {
-    //   this.mapRef.state.map.on('mousemove', 'mygeolayer', (e) => {
-    //     if (e.features.length > 0) {
-    //       if (hoveredStateId) {
-    //         this.mapRef.setFeatureState(
-    //           { source: 'mygeolayer', id: hoveredStateId },
-    //           { hover: false },
-    //         );
-    //       }
-    //       hoveredStateId = e.features[0].id;
-    //       this.mapRef.setFeatureState(
-    //         { source: 'mygeolayer', id: hoveredStateId },
-    //         { hover: true },
-    //       );
-    //     }
-    //   });
-    // }
   }
 
   onCardMouseOver(e) {
