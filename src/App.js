@@ -201,7 +201,9 @@ class App extends Component {
       'text-color': 'black',
     };
     const symbolPaint = MapboxGL.SymbolPaint;
-    MapboxGL.CircleLayout = { visibility: 'visible' };
+    MapboxGL.CircleLayout = {
+      visibility: 'visible',
+    };
     const circleLayout = MapboxGL.CircleLayout;
     MapboxGL.CirclePaint = {
       'circle-color': [
@@ -213,7 +215,7 @@ class App extends Component {
       'circle-radius': [
         'interpolate', ['linear'], ['zoom'],
         0, ['get', 'mag'],
-        22, ['*', 10, ['get', 'mag']],
+        22, ['*', 11, ['get', 'mag']],
       ],
     };
     const circlePaint = MapboxGL.CirclePaint;
