@@ -13,13 +13,13 @@ class SplitScreen extends Component {
         const { leftPane, rightPane, totalNumber } = this.props;
         return (
             <div className="row">
-                <div className="left-to-right col-md-6">
+                <div className="left-to-right col-md-3">
                     {leftPane}
                 </div>
                 <div className="counter">
                     <h1 className="counter-text">{totalNumber}</h1>
                 </div>
-                <div className="col-md-6">
+                <div className="col-md-9">
                     {rightPane}
                 </div>
             </div>

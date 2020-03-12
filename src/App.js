@@ -12,7 +12,6 @@ import * as animationData from './Extras/loading.json';
 import RangeSlider from './Components/RangeSlider';
 import Switcher from './Components/Switcher';
 
-debugger
 const Map = ReactMapboxGl({
   accessToken: process.env.REACT_APP_MAPBOX_ACCESS_TOKEN,
 });
@@ -258,55 +257,58 @@ class App extends Component {
       ));
     }
     return (
-      <SplitScreen
-        totalNumber={this.state.geojsonData ? this.state.geojsonData.features.length : 0}
-        leftPane={this.state.geojsonData
-          ? (
-            <EventCardsHolder
-              totalRecords={this.state.geojsonData ? this.state.geojsonData.features.length : 0}
-              pageChangeHandler={this.paginationChangeHandler}
-              currentPage={this.currentPage}
-              pageLimit={this.pageLimit}
-            >
-              {cards}
-            </EventCardsHolder>
-          ) : (
-            <Lottie
-              options={this.defaultOptions}
-              height={400}
-              width={400}
-              isStopped={false}
-              isPaused={false}
-            />
-          )}
-        rightPane={
-          (
-            <div>
-              <div className="slider">
-                <RangeSlider onSliderChange={this.sliderChangeHandler} />
-              </div>
-              <div className="switcher">
-                <Switcher onSwitcherChanged={(state) => this.switcherChangeHandler(state)} />
-              </div>
-              <Map
-                onStyleLoad={() => this.onStyleLoadHandler(this.mapRef)}
-                ref={(map) => { this.mapRef = map; }}
-                style="mapbox://styles/mapbox/streets-v9" // eslint-disable-line
-                center={this.state.mapCenter}
-                zoom={this.state.mapZoom}
-                containerStyle={{
-                  height: '100vh',
-                  width: '50vw',
-                }}
-                onDragEnd={this.onDragEndHandler}
-                onZoomEnd={this.onZoomEndHandler}
+      <div>
+        {/* <div style={{ position: '', right: '50%', zIndex: '101' }}><h4>USGS Earthquake Map</h4></div> */}
+        <SplitScreen
+          totalNumber={this.state.geojsonData ? this.state.geojsonData.features.length : 0}
+          leftPane={this.state.geojsonData
+            ? (
+              <EventCardsHolder
+                totalRecords={this.state.geojsonData ? this.state.geojsonData.features.length : 0}
+                pageChangeHandler={this.paginationChangeHandler}
+                currentPage={this.currentPage}
+                pageLimit={this.pageLimit}
               >
-                {this.state.geojsonLayer}
-              </Map>
-            </div>
-          )
-        }
-      />
+                {cards}
+              </EventCardsHolder>
+            ) : (
+              <Lottie
+                options={this.defaultOptions}
+                height={400}
+                width={400}
+                isStopped={false}
+                isPaused={false}
+              />
+            )}
+          rightPane={
+            (
+              <div>
+                <div className="slider">
+                  <RangeSlider onSliderChange={this.sliderChangeHandler} />
+                </div>
+                <div className="switcher">
+                  <Switcher onSwitcherChanged={(state) => this.switcherChangeHandler(state)} />
+                </div>
+                <Map
+                  onStyleLoad={() => this.onStyleLoadHandler(this.mapRef)}
+                  ref={(map) => { this.mapRef = map; }}
+                  style="mapbox://styles/mapbox/streets-v9" // eslint-disable-line
+                  center={this.state.mapCenter}
+                  zoom={this.state.mapZoom}
+                  containerStyle={{
+                    height: '100vh',
+                    width: '75vw',
+                  }}
+                  onDragEnd={this.onDragEndHandler}
+                  onZoomEnd={this.onZoomEndHandler}
+                >
+                  {this.state.geojsonLayer}
+                </Map>
+              </div>
+            )
+          }
+        />
+      </div>
     );
   }
 }
