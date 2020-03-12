@@ -12,9 +12,9 @@ import * as animationData from './Extras/loading.json';
 import RangeSlider from './Components/RangeSlider';
 import Switcher from './Components/Switcher';
 
+debugger
 const Map = ReactMapboxGl({
-  accessToken:
-    'pk.eyJ1IjoicmFnZWFnYWluc3R0aGVtYWNoaW5lIiwiYSI6ImNqcjh1dXAzZzBhNm40NWw4M2owMTA5aHMifQ.Bk987UmMmjAQbboX2PAHwA',
+  accessToken: process.env.REACT_APP_MAPBOX_ACCESS_TOKEN,
 });
 class App extends Component {
   constructor(props) {
