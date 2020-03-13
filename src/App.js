@@ -11,6 +11,7 @@ import EventCard from './Components/EventCard';
 import * as animationData from './Extras/loading.json';
 import RangeSlider from './Components/RangeSlider';
 import Switcher from './Components/Switcher';
+import ButtonAppBar from './Components/Navbar';
 
 const Map = ReactMapboxGl({
   accessToken: process.env.REACT_APP_MAPBOX_ACCESS_TOKEN,
@@ -54,8 +55,6 @@ class App extends Component {
         preserveAspectRatio: 'xMidYMid slice',
       },
     };
-    this.currentPage = undefined;
-    this.pageLimit = undefined;
   }
 
   UNSAFE_componentWillMount() {
@@ -106,8 +105,7 @@ class App extends Component {
     this.requestMaker(mapInstance, this.state.startDate, this.state.endDate);
   }
 
-  onCardMouseOver(e) {
-    const { id } = e.target;
+  onCardMouseOver(id) {
     if (id) {
       this.mapRef.state.map.setFeatureState(
         { source: 'mygeolayer', id },
@@ -116,8 +114,7 @@ class App extends Component {
     }
   }
 
-  onCardMouseOut(e) {
-    const { id } = e.target;
+  onCardMouseOut(id) {
     if (id) {
       this.mapRef.state.map.setFeatureState(
         { source: 'mygeolayer', id },
@@ -161,7 +158,7 @@ class App extends Component {
         hoveredEQId: this.hashCode(e.features[0].properties.net + e.features[0].properties.code),
       });
       const el = document.getElementById(this.state.hoveredEQId);
-      el.style.setProperty('box-shadow', '10px 10px 5px black');
+      el.style.setProperty('box-shadow', '10px 10px 5px blue');
     } else if (e.type === 'mouseleave') {
       const el = document.getElementById(this.state.hoveredEQId);
       el.style.removeProperty('box-shadow');
@@ -258,56 +255,58 @@ class App extends Component {
     }
     return (
       <div>
-        {/* <div style={{ position: '', right: '50%', zIndex: '101' }}><h4>USGS Earthquake Map</h4></div> */}
-        <SplitScreen
-          totalNumber={this.state.geojsonData ? this.state.geojsonData.features.length : 0}
-          leftPane={this.state.geojsonData
-            ? (
-              <EventCardsHolder
-                totalRecords={this.state.geojsonData ? this.state.geojsonData.features.length : 0}
-                pageChangeHandler={this.paginationChangeHandler}
-                currentPage={this.currentPage}
-                pageLimit={this.pageLimit}
-              >
-                {cards}
-              </EventCardsHolder>
-            ) : (
-              <Lottie
-                options={this.defaultOptions}
-                height={400}
-                width={400}
-                isStopped={false}
-                isPaused={false}
-              />
-            )}
-          rightPane={
-            (
-              <div>
-                <div className="slider">
-                  <RangeSlider onSliderChange={this.sliderChangeHandler} />
-                </div>
-                <div className="switcher">
-                  <Switcher onSwitcherChanged={(state) => this.switcherChangeHandler(state)} />
-                </div>
-                <Map
-                  onStyleLoad={() => this.onStyleLoadHandler(this.mapRef)}
-                  ref={(map) => { this.mapRef = map; }}
-                  style="mapbox://styles/mapbox/streets-v9" // eslint-disable-line
-                  center={this.state.mapCenter}
-                  zoom={this.state.mapZoom}
-                  containerStyle={{
-                    height: '100vh',
-                    width: '75vw',
-                  }}
-                  onDragEnd={this.onDragEndHandler}
-                  onZoomEnd={this.onZoomEndHandler}
+        <ButtonAppBar />
+        <div>
+          <SplitScreen
+            totalNumber={this.state.geojsonData ? this.state.geojsonData.features.length : 0}
+            leftPane={this.state.geojsonData
+              ? (
+                <EventCardsHolder
+                  totalRecords={this.state.geojsonData ? this.state.geojsonData.features.length : 0}
+                  pageChangeHandler={this.paginationChangeHandler}
+                  currentPage={this.currentPage}
+                  pageLimit={this.pageLimit}
                 >
-                  {this.state.geojsonLayer}
-                </Map>
-              </div>
-            )
-          }
-        />
+                  {cards}
+                </EventCardsHolder>
+              ) : (
+                <Lottie
+                  options={this.defaultOptions}
+                  height={400}
+                  width={400}
+                  isStopped={false}
+                  isPaused={false}
+                />
+              )}
+            rightPane={
+              (
+                <div>
+                  <div className="slider">
+                    <RangeSlider onSliderChange={this.sliderChangeHandler} />
+                  </div>
+                  <div className="switcher">
+                    <Switcher onSwitcherChanged={(state) => this.switcherChangeHandler(state)} />
+                  </div>
+                  <Map
+                    onStyleLoad={() => this.onStyleLoadHandler(this.mapRef)}
+                    ref={(map) => { this.mapRef = map; }}
+                    style="mapbox://styles/mapbox/streets-v9" // eslint-disable-line
+                    center={this.state.mapCenter}
+                    zoom={this.state.mapZoom}
+                    containerStyle={{
+                      height: '85vh',
+                      width: '75vw',
+                    }}
+                    onDragEnd={this.onDragEndHandler}
+                    onZoomEnd={this.onZoomEndHandler}
+                  >
+                    {this.state.geojsonLayer}
+                  </Map>
+                </div>
+              )
+            }
+          />
+        </div>
       </div>
     );
   }

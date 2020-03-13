@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@material-ui/core": "^4.9.3",
+    "@material-ui/icons": "^4.9.1",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.4.0",
     "@testing-library/user-event": "^7.2.1",
@@ -14,7 +15,7 @@
     "node-sass": "^4.13.1",
     "prop-types": "^15.7.2",
     "react": "^16.12.0",
-    "react-bootstrap": "^1.0.0-beta.16",
+    "react-bootstrap": "^1.0.0-beta.17",
     "react-date-picker": "^7.10.0",
     "react-dom": "^16.12.0",
     "react-lottie": "^1.2.3",

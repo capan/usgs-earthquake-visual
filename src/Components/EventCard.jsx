@@ -1,53 +1,86 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import './EventCard.scss';
-import 'react-bootstrap';
+import { makeStyles } from '@material-ui/core/styles';
+import Card from '@material-ui/core/Card';
+import { CardHeader } from '@material-ui/core';
+import Avatar from '@material-ui/core/Avatar';
 
-const EventCard = (props) => {
+const useStyles = makeStyles((theme) => ({
+    root: {
+        minWidth: 275,
+        margin: 12,
+        border: '2px solid',
+    },
+    bullet: {
+        display: 'inline-block',
+        margin: '0 2px',
+        transform: 'scale(0.8)',
+    },
+    title: {
+        fontSize: 14,
+    },
+    pos: {
+        marginBottom: 12,
+    },
+    avatarsmall: {
+        backgroundColor: '#e49487',
+        width: theme.spacing(4),
+        height: theme.spacing(4),
+    },
+    avatarmedium: {
+        backgroundColor: '#e49487',
+        width: theme.spacing(6),
+        height: theme.spacing(6),
+    },
+    avatarlarge: {
+        backgroundColor: '#e49487',
+        width: theme.spacing(8),
+        height: theme.spacing(8),
+    },
+}));
+
+export default function EventCard(props) {
     const {
         detail: {
             properties: { mag, place, time }, id,
             geometry: { coordinates },
         }, onCardMouseOver, onCardMouseOut,
     } = props;
+    const classes = useStyles();
+
+    const avatarClassname = (magnitude) => {
+        if (magnitude <= 4) {
+            return classes.avatarsmall;
+        } if (magnitude > 4 && magnitude <= 6) {
+            return classes.avatarmedium;
+        }
+        return classes.avatarlarge;
+    };
+
     return (
-        <div
+        <Card
+            id={id}
+            className={classes.root}
+            onMouseOver={() => onCardMouseOver(id)}
             onFocus={() => { }}
-            onMouseOver={(e) => onCardMouseOver(e)}
-            onMouseOut={(e) => onCardMouseOut(e)}
+            onMouseOut={() => onCardMouseOut(id)}
             onBlur={() => { }}
             style={{ zIndex: '100' }}
+            onClick={() => props.onCardClick(coordinates)}
+            onKeyDown={() => props.onCardClick}
         >
-            <div
-                id={id}
-                data-key={id}
-                className="event-card"
-                onClick={() => props.onCardClick(coordinates)}
-                onKeyDown={() => props.onCardClick}
-                role="button"
-                tabIndex={0}
-            >
-                <div key={id} className="row" style={{ zIndex: '-1' }}>
-                    <div className="col-md-4">
-                        <p>{new Date(time).toLocaleString('se-SV')}</p>
-                    </div>
-                    <div className="col-md-4">
-                        <p>{place}</p>
-                    </div>
-                    <div className="col-md-4">
-                        <div
-                            className="magnitude"
-                            style={{ height: `${mag * 10}px`, width: `${mag * 10}px` }}
-                        >
-                            <p className="magnitude-text" style={{ transform: `translate(0px, ${10 + Math.ceil(mag / 2)}px)` }}>{mag}</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
+            <CardHeader
+                avatar={(
+                    <Avatar aria-label="recipe" className={avatarClassname(mag)}>
+                        {mag}
+                    </Avatar>
+                )}
+                title={place}
+                subheader={new Date(time).toLocaleString('tr-TR')}
+            />
+        </Card>
     );
-};
+}
 
 EventCard.defaultProps = {
     detail: null,
@@ -62,5 +95,3 @@ EventCard.propTypes = {
     onCardClick: PropTypes.func,
     onCardMouseOut: PropTypes.func,
 };
-
-export default EventCard;

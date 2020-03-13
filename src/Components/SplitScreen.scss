@@ -4,15 +4,15 @@
   top: 50%;
   z-index: 100;
   background-color: red;
-  height: 100px;
-  width: 100px;
+  height: 90px;
+  width: 90px;
   border-radius: 100px;
-  transform: translate(-35px, -35px);
+  transform: translate(-30px, -30px);
   text-align: center;
 }
 
 .counter-text {
-  transform: translate(0px, 25px);
+  transform: translate(0px, 20px);
 }
 
 .left-to-right {
