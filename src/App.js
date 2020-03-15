@@ -12,6 +12,7 @@ import * as animationData from './Extras/loading.json';
 import RangeSlider from './Components/RangeSlider';
 import Switcher from './Components/Switcher';
 import ButtonAppBar from './Components/Navbar';
+import EQTicker from './Components/Ticker';
 
 const Map = ReactMapboxGl({
   accessToken: process.env.REACT_APP_MAPBOX_ACCESS_TOKEN,
@@ -23,17 +24,17 @@ class App extends Component {
       geojsonLayer: null,
       startDate: null,
       endDate: null,
-      // mapCenter: [35, 41],
-      // mapZoom: [4.5],
-      mapCenter: [36, 37.5],
-      mapZoom: [10],
+      mapCenter: [35, 41],
+      mapZoom: [5],
+      // mapCenter: [36, 37.5],
+      // mapZoom: [10],
       geojsonData: null,
       dragSearch: true,
       bounds: undefined,
     };
     this.mapRef = React.createRef();
 
-    // mapbox-gl doesn't work with Id's in string. We sould hash the incoming id from the API
+    // mapbox-gl doesn't work with Id's in string. We should hash the incoming id from the API
     // eslint-disable-next-line no-bitwise
     this.hashCode = (s) => s.split('').reduce((a, b) => (((a << 5) - a) + b.charCodeAt(0)) | 0, 0);
     this.requestMaker = this.requestMaker.bind(this);
@@ -47,6 +48,7 @@ class App extends Component {
     this.sliderChangeHandler = this.sliderChangeHandler.bind(this);
     this.earthQuakeHoverHandler = this.earthQuakeHoverHandler.bind(this);
     this.paginationChangeHandler = this.paginationChangeHandler.bind(this);
+    this.tickData = undefined;
     this.defaultOptions = {
       loop: true,
       autoplay: true,
@@ -307,6 +309,7 @@ class App extends Component {
             }
           />
         </div>
+        <EQTicker jsonData={this.state.geojsonLayer} />
       </div>
     );
   }
