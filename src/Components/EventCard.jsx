@@ -10,6 +10,10 @@ const useStyles = makeStyles((theme) => ({
         minWidth: 275,
         margin: 12,
         border: '2px solid',
+        '&:hover': {
+            boxShadow: '10px 10px 5px #459880',
+          },
+        cursor: 'pointer',
     },
     bullet: {
         display: 'inline-block',

@@ -24,10 +24,10 @@ class App extends Component {
       geojsonLayer: null,
       startDate: null,
       endDate: null,
-      mapCenter: [35, 41],
-      mapZoom: [5],
-      // mapCenter: [36, 37.5],
-      // mapZoom: [10],
+      // mapCenter: [35, 41],
+      // mapZoom: [5],
+      mapCenter: [36, 37.5],
+      mapZoom: [10],
       geojsonData: null,
       dragSearch: true,
       bounds: undefined,
@@ -160,7 +160,7 @@ class App extends Component {
         hoveredEQId: this.hashCode(e.features[0].properties.net + e.features[0].properties.code),
       });
       const el = document.getElementById(this.state.hoveredEQId);
-      el.style.setProperty('box-shadow', '10px 10px 5px blue');
+      el.style.setProperty('box-shadow', '10px 10px 5px #459880');
     } else if (e.type === 'mouseleave') {
       const el = document.getElementById(this.state.hoveredEQId);
       el.style.removeProperty('box-shadow');
@@ -207,7 +207,7 @@ class App extends Component {
       'circle-color': [
         'case',
         ['boolean', ['feature-state', 'hover'], false],
-        'rgba(0, 0, 255, 0.8)',
+        '#459880',
         'rgba(255, 0, 0, 0.3)',
       ],
       'circle-radius': [

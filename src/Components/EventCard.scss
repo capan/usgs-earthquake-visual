@@ -1,27 +1,13 @@
 .event-card {
-  width: 90%;
-  margin: 16px auto;
-  border: 2px solid rgb(56, 56, 56);
-  padding: 16px;
+  // width: 100%;
+  // margin: 16px auto;
+  // border:1px solid rgb(56, 56, 56);
+  // padding: 2px;
   text-align: center;
-  box-shadow: 10px 10px 5px grey;
-  border-radius: 10px;
-  @media (min-width: 500px) {
-    width: 70%;
-  }
-}
-
-.event-card:hover {
-  box-shadow: 10px 10px 5px blue;
-}
-
-.magnitude {
+  // box-shadow: 10px 10px 5px grey;
+  // border-radius: 10px;
+  // @media (min-width: 500px) {
+  //   width: 70%;
+  // }
   background-color: red;
-  border-radius: 200px;
-  text-align: center;
-}
-
-.magnitude-text {
-  color: black;
-  font-weight: bold;
 }

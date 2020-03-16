@@ -9,7 +9,9 @@ import Slider from '@material-ui/core/Slider';
 const useStyles = makeStyles((theme) => ({
     root1: {
         width: 300,
-        zIndex: 1001,
+        zIndex: 1002,
+        background: 'rgba(255, 255, 255, 0.8)',
+        borderRadius: '10px',
     },
     root: {
         display: 'fixed',
@@ -97,30 +99,33 @@ export default function RangeSlider(props) {
     }
 
     return (
-        <div className={classes.root1}>
-            <ThemeProvider theme={theme}>
-                <div className={classes.root}>
-                    <ButtonGroup size="small" aria-label="small outlined button group" variant="contained" color="primary">
-                        <Button onClick={() => buttonGroupHandler(1)}>1 Month</Button>
-                        <Button onClick={() => buttonGroupHandler(2)}>2 Months</Button>
-                        <Button onClick={() => buttonGroupHandler(3)}>3 Months</Button>
-                    </ButtonGroup>
-                </div>
-                <Typography id="range-slider" variant="h6">
-                    {rangeTypography(value)}
-                </Typography>
-            </ThemeProvider>
-            <Slider
-                max={180}
-                min={0}
-                value={value}
-                onChangeCommitted={() => handleChangeCommit(value)}
-                onChange={(event, newValue) => handleChange(event, newValue)}
-                valueLabelDisplay="auto"
-                valueLabelFormat={(val) => valueLabelFormat(val)}
-                aria-labelledby="range-slider"
-                getAriaValueText={(val) => valuetext(val)}
-            />
-        </div>
+        <>
+            <div className={classes.root1}>
+                <ThemeProvider theme={theme}>
+                    <div className={classes.root}>
+                        <ButtonGroup size="small" aria-label="small outlined button group" variant="contained">
+                            <Button style={{ backgroundColor: '#459880' }} onClick={() => buttonGroupHandler(1)}>1 Month</Button>
+                            <Button style={{ backgroundColor: '#459880' }} onClick={() => buttonGroupHandler(2)}>2 Months</Button>
+                            <Button style={{ backgroundColor: '#459880' }} onClick={() => buttonGroupHandler(3)}>3 Months</Button>
+                        </ButtonGroup>
+                    </div>
+                    <Typography id="range-slider" variant="h6">
+                        {rangeTypography(value)}
+                    </Typography>
+                </ThemeProvider>
+                <Slider
+                    max={180}
+                    min={0}
+                    value={value}
+                    onChangeCommitted={() => handleChangeCommit(value)}
+                    onChange={(event, newValue) => handleChange(event, newValue)}
+                    valueLabelDisplay="auto"
+                    valueLabelFormat={(val) => valueLabelFormat(val)}
+                    aria-labelledby="range-slider"
+                    getAriaValueText={(val) => valuetext(val)}
+                    style={{ color: '#459880' }}
+                />
+            </div>
+        </>
     );
 }
