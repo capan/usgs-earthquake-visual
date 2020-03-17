@@ -6,6 +6,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import { withStyles } from '@material-ui/core/styles';
 import { green } from '@material-ui/core/colors';
 import PropTypes from 'prop-types';
+import Tooltip from '@material-ui/core/Tooltip';
 
 export default function Switcher(props) {
     const [state, setState] = React.useState({
@@ -44,19 +45,21 @@ export default function Switcher(props) {
                     <FormControlLabel
                         value="start"
                         control={(
-                            <GreenSwitch
-                                checked={state.checked}
-                                onChange={handleChange('checked')}
-                                value="checked"
-                                inputProps={{ 'aria-label': 'primary checkbox' }}
-                            />
+                            <Tooltip title={`${state.checked ? 'Close' : 'Open'} Auto Search`}>
+                                <GreenSwitch
+                                    checked={state.checked}
+                                    onChange={handleChange('checked')}
+                                    value="checked"
+                                    inputProps={{ 'aria-label': 'primary checkbox' }}
+                                />
+                            </Tooltip>
                         )}
                         label="Search as I move the map"
-                        labelPlacement="start"
+                        labelPlacement="top"
                     />
                 </FormGroup>
             </FormControl>
-        </div>
+        </div >
     );
 }
 
