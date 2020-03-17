@@ -49,13 +49,9 @@ export default function ButtonAppBar() {
                         onClose={handleClose}
                         TransitionComponent={Fade}
                     >
-                        <MenuItem>
-                            <span role="img" aria-label="sheep">💁</span>
-                            More
-                        </MenuItem>
-                        <MenuItem>
-                            <span role="img" aria-label="sheep">📖</span>
-                        Resources
+                        <MenuItem onClick={() => { window.open('https://earthquake.usgs.gov/fdsnws/event/1/', '_blank'); }}>
+                            <span role="img" aria-label="book">📖</span>
+                        API Resource
                         </MenuItem>
                     </Menu>
                     <Typography variant="h6" className={classes.title}>

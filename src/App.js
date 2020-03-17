@@ -16,6 +16,8 @@ import EQTicker from './Components/Ticker';
 
 const Map = ReactMapboxGl({
   accessToken: process.env.REACT_APP_MAPBOX_ACCESS_TOKEN,
+  maxZoom: 12,
+  minZoom: 5,
 });
 class App extends Component {
   constructor(props) {
@@ -24,10 +26,8 @@ class App extends Component {
       geojsonLayer: null,
       startDate: null,
       endDate: null,
-      // mapCenter: [35, 41],
-      // mapZoom: [5],
-      mapCenter: [36, 37.5],
-      mapZoom: [10],
+      mapCenter: [36, 40],
+      mapZoom: [5.2],
       geojsonData: null,
       dragSearch: true,
       bounds: undefined,
@@ -299,6 +299,7 @@ class App extends Component {
                       height: '85vh',
                       width: '75vw',
                     }}
+                    maxBounds={[[19, 29], [46, 50]]}
                     onDragEnd={this.onDragEndHandler}
                     onZoomEnd={this.onZoomEndHandler}
                   >
