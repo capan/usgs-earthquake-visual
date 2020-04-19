@@ -9,10 +9,10 @@ Current featuress
 - Temporal filtering for the last six months data.
 - Significant earthquakes feed.
 - Spatial visualization
+- Cluster view
 
 Goals
 -----
-- Cluster view
 - Heatmap
 - Search box
 
