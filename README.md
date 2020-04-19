@@ -2,7 +2,7 @@
 
 An app for React practice.
 
-![alt text](https://github.com/capan/usgs-earthquake-visual/blob/master/assets/2.png)
+![alt text](https://github.com/capan/usgs-earthquake-visual/blob/master/assets/2.PNG)
 
 Current features
 ----------------
