@@ -1,7 +1,7 @@
 
 /* eslint-disable react/destructuring-assignment */
 import React, { Component } from 'react';
-import ReactMapboxGl, { GeoJSONLayer } from 'react-mapbox-gl';
+import ReactMapboxGl, { GeoJSONLayer, Cluster, Marker } from 'react-mapbox-gl';
 import * as MapboxGL from 'mapbox-gl';
 import Lottie from 'react-lottie';
 import './App.css';
@@ -155,15 +155,17 @@ class App extends Component {
   }
 
   earthQuakeHoverHandler(e) {
-    if (e.type === 'mouseenter') {
+    if (e.type === 'mouseenter' && e.features && !e.features[0].properties.cluster) {
       this.setState({
         hoveredEQId: this.hashCode(e.features[0].properties.net + e.features[0].properties.code),
       });
       const el = document.getElementById(this.state.hoveredEQId);
       el.style.setProperty('box-shadow', '10px 10px 5px #459880');
     } else if (e.type === 'mouseleave') {
-      const el = document.getElementById(this.state.hoveredEQId);
-      el.style.removeProperty('box-shadow');
+      if (this.state.hoveredEQId) {
+        const el = document.getElementById(this.state.hoveredEQId);
+        el.style.removeProperty('box-shadow');
+      }
     }
   }
 
@@ -237,6 +239,7 @@ class App extends Component {
         circlePaint={circlePaint}
         circleOnMouseEnter={this.earthQuakeHoverHandler}
         circleOnMouseLeave={this.earthQuakeHoverHandler}
+        sourceOptions={{ cluster: true }}
       />,
       geojsonData: coordinateList,
     });
@@ -255,6 +258,43 @@ class App extends Component {
         />
       ));
     }
+
+    const clusterMarker = (coordinates, pointCount) => (
+      this.state.geojsonData
+        ? (
+          <Marker coordinates={coordinates} anchor="center">
+            <span style={{
+              height: '30px',
+              width: '30px',
+              backgroundColor: 'orange',
+              borderRadius: '50%',
+              display: 'inline-block',
+              textAlign: 'center',
+              pointerEvents: 'none',
+              paddingTop: '5px',
+            }}
+            >
+              <b>{pointCount > 100 ? '100+' : pointCount}</b>
+            </span>
+          </Marker>
+        ) : ''
+    );
+
+    const cluster = this.state.geojsonData ? (
+      <Cluster ClusterMarkerFactory={clusterMarker}>
+        {
+          this.state.geojsonData.features.map((feature, key) => (
+            <Marker
+              // eslint-disable-next-line react/no-array-index-key
+              key={key}
+              // style={styles.marker}
+              coordinates={feature.geometry.coordinates}
+            // onClick={this.onMarkerClick.bind(this, feature.geometry.coordinates)}
+            />
+          ))
+        }
+      </Cluster>
+    ) : '';
     return (
       <div>
         <ButtonAppBar />
@@ -304,6 +344,7 @@ class App extends Component {
                     onZoomEnd={this.onZoomEndHandler}
                   >
                     {this.state.geojsonLayer}
+                    {this.state.geojsonData ? cluster : ''}
                   </Map>
                 </div>
               )
