@@ -10,9 +10,8 @@ Current features
 - Significant earthquakes feed.
 - Spatial visualization
 - Cluster view
+- Search box
 
 Goals
 -----
 - Heatmap
-- Search box
-
