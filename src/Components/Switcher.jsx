@@ -59,7 +59,7 @@ export default function Switcher(props) {
                     />
                 </FormGroup>
             </FormControl>
-        </div >
+        </div>
     );
 }
 

@@ -1,10 +1,10 @@
-
 /* eslint-disable react/destructuring-assignment */
 import React, { Component } from 'react';
 import ReactMapboxGl, { GeoJSONLayer, Cluster, Marker } from 'react-mapbox-gl';
 import * as MapboxGL from 'mapbox-gl';
 import Lottie from 'react-lottie';
 import './App.css';
+import Geocoder from 'react-mapbox-gl-geocoder';
 import SplitScreen from './Components/SplitScreen';
 import EventCardsHolder from './Components/EventCardsHolder';
 import EventCard from './Components/EventCard';
@@ -36,8 +36,9 @@ class App extends Component {
 
     // mapbox-gl doesn't work with Id's in string. We should hash the incoming id from the API
     // eslint-disable-next-line no-bitwise
-    this.hashCode = (s) => s.split('').reduce((a, b) => (((a << 5) - a) + b.charCodeAt(0)) | 0, 0);
+    this.hashCode = (s) => s.split('').reduce((a, b) => ((a << 5) - a + b.charCodeAt(0)) | 0, 0);
     this.requestMaker = this.requestMaker.bind(this);
+    this.onSelected = this.onSelected.bind(this);
     this.onCardMouseOut = this.onCardMouseOut.bind(this);
     this.markerGenerator = this.markerGenerator.bind(this);
     this.onCardMouseOver = this.onCardMouseOver.bind(this);
@@ -81,6 +82,13 @@ class App extends Component {
 
   componentDidMount() {
     this.requestMaker(this.mapRef, this.state.startDate, this.state.endDate);
+  }
+
+  onSelected(viewport) {
+    this.setState({
+      mapCenter: [viewport.longitude, viewport.latitude],
+      mapZoom: [viewport.zoom],
+    });
   }
 
   onZoomEndHandler(e) {
@@ -147,17 +155,30 @@ class App extends Component {
   sliderChangeHandler(e) {
     const [startDate, endDate] = e;
     if (this.state.startDate !== startDate || this.state.endDate !== endDate) {
-      this.setState({
-        startDate,
-        endDate,
-      }, () => this.requestMaker(this.mapRef, this.state.startDate, this.state.endDate));
+      this.setState(
+        {
+          startDate,
+          endDate,
+        },
+        () => this.requestMaker(
+            this.mapRef,
+            this.state.startDate,
+            this.state.endDate,
+          ),
+      );
     }
   }
 
   earthQuakeHoverHandler(e) {
-    if (e.type === 'mouseenter' && e.features && !e.features[0].properties.cluster) {
+    if (
+      e.type === 'mouseenter'
+      && e.features
+      && !e.features[0].properties.cluster
+    ) {
       this.setState({
-        hoveredEQId: this.hashCode(e.features[0].properties.net + e.features[0].properties.code),
+        hoveredEQId: this.hashCode(
+          e.features[0].properties.net + e.features[0].properties.code,
+        ),
       });
       const el = document.getElementById(this.state.hoveredEQId);
       el.style.setProperty('box-shadow', '10px 10px 5px #459880');
@@ -188,7 +209,6 @@ class App extends Component {
     }
   }
 
-
   markerGenerator(coordinateList) {
     MapboxGL.SymbolLayout = {
       'text-field': '{place}',
@@ -213,9 +233,13 @@ class App extends Component {
         'rgba(255, 0, 0, 0.3)',
       ],
       'circle-radius': [
-        'interpolate', ['linear'], ['zoom'],
-        0, ['get', 'mag'],
-        22, ['*', 11, ['get', 'mag']],
+        'interpolate',
+        ['linear'],
+        ['zoom'],
+        0,
+        ['get', 'mag'],
+        22,
+        ['*', 11, ['get', 'mag']],
       ],
     };
     const circlePaint = MapboxGL.CirclePaint;
@@ -225,27 +249,38 @@ class App extends Component {
     };
     for (let i = 0; i < coordinateList.features.length; i += 1) {
       geojsonObject.features.push(coordinateList.features[i]);
-      geojsonObject.features[i].id = this.hashCode(coordinateList.features[i].id);
+      geojsonObject.features[i].id = this.hashCode(
+        coordinateList.features[i].id,
+      );
     }
     this.setState({
-      geojsonLayer: <GeoJSONLayer
-        id="mygeolayer"
-        source="mygeolayer"
-        key="GeoJSONLayerKey"
-        data={geojsonObject}
-        symbolLayout={symbolLayout}
-        symbolPaint={symbolPaint}
-        circleLayout={circleLayout}
-        circlePaint={circlePaint}
-        circleOnMouseEnter={this.earthQuakeHoverHandler}
-        circleOnMouseLeave={this.earthQuakeHoverHandler}
-        sourceOptions={{ cluster: true }}
-      />,
+      geojsonLayer: (
+        <GeoJSONLayer
+          id="mygeolayer"
+          source="mygeolayer"
+          key="GeoJSONLayerKey"
+          data={geojsonObject}
+          symbolLayout={symbolLayout}
+          symbolPaint={symbolPaint}
+          circleLayout={circleLayout}
+          circlePaint={circlePaint}
+          circleOnMouseEnter={this.earthQuakeHoverHandler}
+          circleOnMouseLeave={this.earthQuakeHoverHandler}
+          sourceOptions={{ cluster: true }}
+        />
+      ),
       geojsonData: coordinateList,
     });
   }
 
   render() {
+    const { viewport } = this.state;
+    const queryParams = {
+      // country: 'us',
+    };
+    const mapAccess = {
+      mapboxApiAccessToken: process.env.REACT_APP_MAPBOX_ACCESS_TOKEN,
+    };
     let cards = null;
     if (this.state.geojsonData) {
       cards = this.state.geojsonData.features.map((feature) => (
@@ -259,11 +294,10 @@ class App extends Component {
       ));
     }
 
-    const clusterMarker = (coordinates, pointCount) => (
-      this.state.geojsonData
-        ? (
-          <Marker coordinates={coordinates} anchor="center">
-            <span style={{
+    const clusterMarker = (coordinates, pointCount) => (this.state.geojsonData ? (
+        <Marker coordinates={coordinates} anchor="center">
+          <span
+            style={{
               height: '30px',
               width: '30px',
               backgroundColor: 'orange',
@@ -273,38 +307,47 @@ class App extends Component {
               pointerEvents: 'none',
               paddingTop: '5px',
             }}
-            >
-              <b>{pointCount > 100 ? '100+' : pointCount}</b>
-            </span>
-          </Marker>
-        ) : ''
-    );
+          >
+            <b>{pointCount > 100 ? '100+' : pointCount}</b>
+          </span>
+        </Marker>
+      ) : (
+        ''
+      ));
 
     const cluster = this.state.geojsonData ? (
       <Cluster ClusterMarkerFactory={clusterMarker}>
-        {
-          this.state.geojsonData.features.map((feature, key) => (
-            <Marker
-              // eslint-disable-next-line react/no-array-index-key
-              key={key}
-              // style={styles.marker}
-              coordinates={feature.geometry.coordinates}
+        {this.state.geojsonData.features.map((feature, key) => (
+          <Marker
+            // eslint-disable-next-line react/no-array-index-key
+            key={key}
+            // style={styles.marker}
+            coordinates={feature.geometry.coordinates}
             // onClick={this.onMarkerClick.bind(this, feature.geometry.coordinates)}
-            />
-          ))
-        }
+          />
+        ))}
       </Cluster>
-    ) : '';
+    ) : (
+      ''
+    );
     return (
       <div>
         <ButtonAppBar />
         <div>
           <SplitScreen
-            totalNumber={this.state.geojsonData ? this.state.geojsonData.features.length : 0}
-            leftPane={this.state.geojsonData
-              ? (
+            totalNumber={
+              this.state.geojsonData
+                ? this.state.geojsonData.features.length
+                : 0
+            }
+            leftPane={
+              this.state.geojsonData ? (
                 <EventCardsHolder
-                  totalRecords={this.state.geojsonData ? this.state.geojsonData.features.length : 0}
+                  totalRecords={
+                    this.state.geojsonData
+                      ? this.state.geojsonData.features.length
+                      : 0
+                  }
                   pageChangeHandler={this.paginationChangeHandler}
                   currentPage={this.currentPage}
                   pageLimit={this.pageLimit}
@@ -319,36 +362,51 @@ class App extends Component {
                   isStopped={false}
                   isPaused={false}
                 />
-              )}
-            rightPane={
-              (
-                <div>
+              )
+            }
+            rightPane={(
+              <div>
+                <div className="flex-container">
                   <div className="slider">
                     <RangeSlider onSliderChange={this.sliderChangeHandler} />
                   </div>
                   <div className="switcher">
-                    <Switcher onSwitcherChanged={(state) => this.switcherChangeHandler(state)} />
+                    <Switcher
+                      onSwitcherChanged={(state) => this.switcherChangeHandler(state)}
+                    />
                   </div>
-                  <Map
-                    onStyleLoad={() => this.onStyleLoadHandler(this.mapRef)}
-                    ref={(map) => { this.mapRef = map; }}
-                    style="mapbox://styles/mapbox/streets-v9" // eslint-disable-line
-                    center={this.state.mapCenter}
-                    zoom={this.state.mapZoom}
-                    containerStyle={{
-                      height: '85vh',
-                      width: '75vw',
-                    }}
-                    maxBounds={[[19, 29], [46, 50]]}
-                    onDragEnd={this.onDragEndHandler}
-                    onZoomEnd={this.onZoomEndHandler}
-                  >
-                    {this.state.geojsonLayer}
-                    {this.state.geojsonData ? cluster : ''}
-                  </Map>
+                  <div className="searchbox">
+                    <Geocoder
+                      // eslint-disable-next-line react/jsx-props-no-spreading
+                      {...mapAccess}
+                      onSelected={this.onSelected}
+                      viewport={viewport}
+                      hideOnSelect
+                      queryParams={queryParams}
+                    />
+                  </div>
                 </div>
-              )
-            }
+                <Map
+                  onStyleLoad={() => this.onStyleLoadHandler(this.mapRef)}
+                  ref={(map) => {
+                    this.mapRef = map;
+                  }}
+                  style="mapbox://styles/mapbox/streets-v9" // eslint-disable-line
+                  center={this.state.mapCenter}
+                  zoom={this.state.mapZoom}
+                  containerStyle={{
+                    height: '85vh',
+                    width: '75vw',
+                  }}
+                  // maxBounds={[[19, 29], [46, 50]]}
+                  onDragEnd={this.onDragEndHandler}
+                  onZoomEnd={this.onZoomEndHandler}
+                >
+                  {this.state.geojsonLayer}
+                  {this.state.geojsonData ? cluster : ''}
+                </Map>
+              </div>
+            )}
           />
         </div>
         <EQTicker jsonData={this.state.geojsonLayer} />
