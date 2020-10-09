@@ -23,11 +23,14 @@
     "react-mapbox-gl-geocoder": "^1.1.0",
     "react-native-dotenv": "^0.2.0",
     "react-scripts": "^3.4.0",
-    "react-ticker": "^1.2.2"
+    "react-ticker": "^1.2.2",
+    "serve": "^11.3.2"
   },
   "scripts": {
-    "start": "react-scripts --max_old_space_size=4096 start",
+    "dev": "react-scripts start",
+    "start": "serve -s build",
     "build": "react-scripts --max_old_space_size=4096 build",
+    "heroku-postbuild": "npm run build",
     "test": "react-scripts test --passWithNoTests",
     "eject": "react-scripts eject",
     "lint": "eslint src/**/*.js src/**/*.jsx"
