@@ -19,7 +19,7 @@
   direction: rtl;
 }
 
-.flex-container{
+.flex-container {
   clear: both;
   display: flex;
   flex-direction: row;
@@ -47,15 +47,32 @@
   z-index: 100;
 }
 
-.searchbox{
+.searchbox {
   z-index: 99;
   // text-align: right;
 }
 
-.react-geocoder-results{
+.react-geocoder-results {
   background-color: rgba(236, 236, 236, 0.747);
 }
 
-.react-geocoder-item:hover{
+.react-geocoder-item:hover {
   background-color: rgba(69, 152, 128, 0.747);
+}
+
+.main-page {
+  display: block;
+}
+
+.warning-age {
+  display: none;
+}
+
+@media screen and (max-width: 800px) {
+  .warning-page {
+    display: block;
+  }
+  .main-page {
+    display: none;
+  }
 }
