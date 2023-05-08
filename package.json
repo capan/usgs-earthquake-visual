@@ -22,7 +22,7 @@
     "react-mapbox-gl": "^4.8.2",
     "react-mapbox-gl-geocoder": "^1.1.0",
     "react-native-dotenv": "^0.2.0",
-    "react-scripts": "^3.4.0",
+    "react-scripts": "^5.0.1",
     "react-ticker": "^1.2.2",
     "serve": "^11.3.2"
   },
