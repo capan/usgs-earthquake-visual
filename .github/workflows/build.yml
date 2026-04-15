@@ -21,6 +21,8 @@ jobs:
           node-version: 20
           cache: npm
       - run: npm ci --legacy-peer-deps
+      - name: Check token secret
+        run: 'echo "Token is set: ${{ secrets.REACT_APP_MAPBOX_ACCESS_TOKEN != '''' }}"'
       - run: npm run build
         env:
           REACT_APP_MAPBOX_ACCESS_TOKEN: ${{ secrets.REACT_APP_MAPBOX_ACCESS_TOKEN }}
