@@ -1,36 +1,34 @@
 import React from 'react';
-import Switch from '@material-ui/core/Switch';
-import FormGroup from '@material-ui/core/FormGroup';
-import FormControl from '@material-ui/core/FormControl';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import { withStyles } from '@material-ui/core/styles';
-import { green } from '@material-ui/core/colors';
+import Switch from '@mui/material/Switch';
+import FormGroup from '@mui/material/FormGroup';
+import FormControl from '@mui/material/FormControl';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import { styled } from '@mui/material/styles';
+import { green } from '@mui/material/colors';
 import PropTypes from 'prop-types';
-import Tooltip from '@material-ui/core/Tooltip';
+import Tooltip from '@mui/material/Tooltip';
 
-export default function Switcher(props) {
+export default function Switcher({ onSwitcherChanged = () => {} }) {
     const [state, setState] = React.useState({
         checked: true,
     });
 
     const handleChange = (name) => (event) => {
         setState({ ...state, [name]: event.target.checked });
-        props.onSwitcherChanged(state.checked);
+        onSwitcherChanged(state.checked);
     };
 
-    const GreenSwitch = withStyles({
-        switchBase: {
+    const GreenSwitch = styled(Switch)(({ theme }) => ({
+        '& .MuiSwitch-switchBase': {
             color: green[300],
-            '&$checked': {
+            '&.Mui-checked': {
                 color: green[500],
-            },
-            '&$checked + $track': {
-                backgroundColor: green[500],
+                '& + .MuiSwitch-track': {
+                    backgroundColor: green[500],
+                },
             },
         },
-        checked: {},
-        track: {},
-    })(Switch);
+    }));
 
     return (
         <div>
@@ -62,10 +60,6 @@ export default function Switcher(props) {
         </div>
     );
 }
-
-Switcher.defaultProps = {
-    onSwitcherChanged: () => { },
-};
 
 Switcher.propTypes = {
     onSwitcherChanged: PropTypes.func,

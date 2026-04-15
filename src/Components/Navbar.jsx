@@ -1,17 +1,17 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
-import { Menu } from '@material-ui/core';
-import Fade from '@material-ui/core/Fade';
-import Backdrop from '@material-ui/core/Backdrop';
-import Modal from '@material-ui/core/Modal';
-import Avatar from '@material-ui/core/Avatar';
-import Tooltip from '@material-ui/core/Tooltip';
+import { makeStyles } from '@mui/styles';
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
+import IconButton from '@mui/material/IconButton';
+import MenuIcon from '@mui/icons-material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import Menu from '@mui/material/Menu';
+import Fade from '@mui/material/Fade';
+import Backdrop from '@mui/material/Backdrop';
+import Modal from '@mui/material/Modal';
+import Avatar from '@mui/material/Avatar';
+import Tooltip from '@mui/material/Tooltip';
 import react_icon from '../Extras/react_icon.webp';
 import mapbox_icon from '../Extras/mapbox.png';
 import material_icon from '../Extras/material_ui.png';
@@ -134,12 +134,12 @@ export default function ButtonAppBar() {
                                 </div>
                                 <div className="col-md-4" align="center">
                                     <p>
-                                        <Tooltip title="React Mapbox GL">
+                                        <Tooltip title="React Map GL">
                                             <Avatar
                                                 alt="Remy Sharp"
                                                 src={mapbox_icon}
                                                 className={classes.avatar_large}
-                                                onClick={() => window.open('https://github.com/alex3165/react-mapbox-gl', '_blank')}
+                                                onClick={() => window.open('https://visgl.github.io/react-map-gl/', '_blank')}
                                             />
                                         </Tooltip>
                                     </p>
@@ -152,7 +152,7 @@ export default function ButtonAppBar() {
                                                 alt="Remy Sharp"
                                                 src={material_icon}
                                                 className={classes.avatar_large}
-                                                onClick={() => window.open('https://material-ui.com/', '_blank')}
+                                                onClick={() => window.open('https://mui.com/', '_blank')}
                                             />
                                         </Tooltip>
                                     </p>
