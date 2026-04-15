@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/core/styles';
-import Card from '@material-ui/core/Card';
-import { CardHeader } from '@material-ui/core';
-import Avatar from '@material-ui/core/Avatar';
+import { makeStyles } from '@mui/styles';
+import Card from '@mui/material/Card';
+import CardHeader from '@mui/material/CardHeader';
+import Avatar from '@mui/material/Avatar';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -43,13 +43,12 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function EventCard(props) {
-    const {
-        detail: {
-            properties: { mag, place, time }, id,
-            geometry: { coordinates },
-        }, onCardMouseOver, onCardMouseOut,
-    } = props;
+export default function EventCard({
+    detail: {
+        properties: { mag, place, time }, id,
+        geometry: { coordinates },
+    }, onCardMouseOver = () => {}, onCardMouseOut = () => {}, onCardClick = () => {}
+}) {
     const classes = useStyles();
 
     const avatarClassname = (magnitude) => {
@@ -70,8 +69,8 @@ export default function EventCard(props) {
             onMouseOut={() => onCardMouseOut(id)}
             onBlur={() => { }}
             style={{ zIndex: '100' }}
-            onClick={() => props.onCardClick(coordinates)}
-            onKeyDown={() => props.onCardClick}
+            onClick={() => onCardClick(coordinates)}
+            onKeyDown={() => onCardClick}
         >
             <CardHeader
                 avatar={(
@@ -85,13 +84,6 @@ export default function EventCard(props) {
         </Card>
     );
 }
-
-EventCard.defaultProps = {
-    detail: null,
-    onCardMouseOver: () => { },
-    onCardMouseOut: () => { },
-    onCardClick: () => { },
-};
 
 EventCard.propTypes = {
     detail: PropTypes.object,
